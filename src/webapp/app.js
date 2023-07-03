@@ -49,7 +49,6 @@ export let isThread = false;
 export let currentIndex = 0,
   postsIndex,
   messagesIndex = mDB.length;
-let firstTyping = false;
 
 function signUp() {
   let data = new FormData($("register-form"));
@@ -157,7 +156,6 @@ export async function getUsers() {
   userElements.forEach((user) => {
     user.addEventListener("click", () => {
       toggleMessageBoxVisibility(true);
-      firstTyping = true;
       let interSection = $("message-intersection-observer");
       messagesWrapper.innerHTML = ""; // clear messages box contents
       messagesWrapper.appendChild(interSection);
@@ -181,7 +179,6 @@ export async function getUsers() {
   qS("close-messages-button").addEventListener("click", () => {
     toggleMessageBoxVisibility(false);
     clearTimeout(typingTimer);
-    firstTyping = false;
     messagesIndex = mDB.length;
     $("messageID").value = "";
   });
@@ -225,30 +222,37 @@ $("new-comment").addEventListener("submit", (e) => {
 
 var typingTimer; //timer identifier
 var resetTime = 1500;
+let isTyping = false;
 
 $("messageID").addEventListener("keydown", (e) => {
-  if (firstTyping) {
-    sendTyping();
-  }
   clearTimeout(typingTimer);
+
+  if (!isTyping) {
+    sendTyping();
+    isTyping = true;
+  }
+
   typingTimer = setTimeout(() => {
-    firstTyping = false;
+    isTyping = false;
     sendTyping();
   }, resetTime);
+
+  // if (firstTyping) {
+  //   sendTyping();
+  // }
+  // firstTyping = false;
+  // clearTimeout(typingTimer);
+  // typingTimer = setTimeout(() => {
+  //   sendTyping();
+  // }, resetTime);
 
   if (e.code === "Enter" || e.code === "NumpadEnter") {
     checkSocketAndSend();
     e.preventDefault();
-    clearTimeout(typingTimer);
     // here an 'else' block triggers typing-in-progress
     // make a buffer for it so it wouldnt trigger with every key
   }
 });
-
-function doneTyping() {
-  console.log("doneTyping");
-  sendTyping();
-}
 
 $("send-message").addEventListener("click", (e) => {
   checkSocketAndSend();

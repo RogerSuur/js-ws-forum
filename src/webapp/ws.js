@@ -84,7 +84,16 @@ export function Forum() {
             break;
           case "typing":
             // display typing to user
-            console.log("typing in progress");
+            let chatBubble = qS("chat-bubble");
+            if (
+              chatBubble.style.display === "" ||
+              chatBubble.style.display === "none"
+            ) {
+              chatBubble.style.display = "block";
+            } else {
+              chatBubble.style.display = "none";
+            }
+            // toggle the typing class
             break;
           case "broadcast":
             sortUsersbyLastMessage(data.from);

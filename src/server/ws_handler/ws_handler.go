@@ -142,7 +142,7 @@ func ListenToWsChannel() {
 				response.Action = e.Action
 				response.Sender = e.Sender
 				response.Receiver = e.Receiver
-				BroadcastToClient(e.Sender, e.Receiver, response)
+				BroadcastTyping(e.Sender, e.Receiver, response)
 
 			}
 		}
@@ -176,6 +176,21 @@ func BroadcastToAll(response WsJsonResponse) {
 func BroadcastToClient(sender string, receiver string, response WsJsonResponse) {
 	for client := range clients {
 		if clients[client] == receiver || clients[client] == sender {
+			fmt.Println("broadcasting to client:", clients[client])
+			fmt.Println(response)
+			err := client.WriteJSON(response)
+			if err != nil {
+				log.Println("websocket error")
+				_ = client.Close()
+				delete(clients, client)
+			}
+		}
+	}
+}
+
+func BroadcastTyping(sender string, receiver string, response WsJsonResponse) {
+	for client := range clients {
+		if clients[client] == receiver {
 			fmt.Println("broadcasting to client:", clients[client])
 			fmt.Println(response)
 			err := client.WriteJSON(response)
