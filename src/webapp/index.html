@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Real Time Forum</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="style.css" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="./static/images/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./static/images/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./static/images/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="./static/images/favicon/site.webmanifest" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barrio&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barrio&family=Rubik+Moonrocks&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <script src="https://kit.fontawesome.com/4c286e0ec9.js" crossorigin="anonymous"></script>
+
+  <div class="wrapper">
+    <div class="header">
+      <div class="user-profile-container hidden">
+        <div class="user-profile">
+          <div class="avatar">
+            <img src="./static/images/userAvatars/001.jpg" class="clipped" alt="" />
+          </div>
+          <div class="current-user" id="current-userID"></div>
+        </div>
+        <div class="horizontal-spacer">|</div>
+        <button id="logout-user" class="logout-button" type="button">
+          Logout
+        </button>
+      </div>
+    </div>
+    <div class="logo">
+      <a href="./">
+        <div class="clock-wrapper">
+          <div class="clock-background">
+            <div class="hour"></div>
+            <div class="minute"></div>
+            <div class="second"></div>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="ads-area">
+      <div class="ad">
+        <a href="https://kood.tech/" target="_blank"><img class="ad-image" src="./static/images/ad.png" alt="" /></a>
+      </div>
+    </div>
+    <div class="lds-ellipsis hidden">
+      <!-- Load more ellipsis (three dots) -->
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="overlay"></div>
+    <div class="posts-area hidden">
+      <form class="user-input-area" id="new-post">
+        <div class="new-post-header">
+          What's the time? Looks like it's New Post o'clock!
+        </div>
+        <input type="text" id="titleID" name="title" placeholder="Title" />
+        <textarea name="content" id="contentID" placeholder="Content"></textarea>
+        <div class="category-submit-wrapper">
+          <div class="category">
+            <label for="category">Define a category:</label>
+            <select name="category" id="categoryID">
+              <option value="general">General</option>
+              <option value="music">Music</option>
+              <option value="movies">Movies</option>
+              <option value="sports">Sports</option>
+              <option value="technology">Technology</option>
+              <option value="science">Science</option>
+              <option value="gaming">Gaming</option>
+              <option value="food">Food</option>
+              <option value="travel">Travel</option>
+              <option value="art">Art</option>
+            </select>
+          </div>
+          <div class="button-wrapper">
+            <button id="post" type="submit">Share Your Thoughts</button>
+          </div>
+        </div>
+      </form>
+      <div class="posts-wrapper">
+        <div id="intersection-observer"></div>
+      </div>
+    </div>
+    <div class="thread-area hidden">
+      <div class="thread-header">
+        <div class="thread-header-text"></div>
+        <div class="close-thread-button">
+          <i class="fas fa-x"></i>
+        </div>
+      </div>
+      <div class="thread-wrapper">
+        <div id="thread-intersection-observer"></div>
+      </div>
+      <div class="thread-footer">
+        <form class="user-input-area" id="new-comment">
+          <div class="new-post-header">
+            Is this the real life? Is this just fantasy?
+          </div>
+          <input type="hidden" id="parentID" name="postID" value="none">
+          <textarea id="commentContentID" name="content" placeholder="Comment"></textarea>
+          <div class="button-wrapper">
+            <button id="comment" type="submit">Post Your Comment</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="messages-area hidden">
+      <div class="messages-header">
+        <div class="messages-header-text"></div>
+        <div class="close-messages-button">
+          <i class="fas fa-x"></i>
+        </div>
+      </div>
+      <div class="messages-wrapper">
+        <div id="message-intersection-observer"></div>
+      </div>
+      <form class="user-input-area" id="new-message">
+        <input type="text" name="message" class="form-control" id="messageID" placeholder="Type your message here..." />
+        <div class="button-wrapper">
+          <button id="send-message" type="submit">Send Message</button>
+          <!-- <input type="hidden" name="action" id="action" /> -->
+        </div>
+      </form>
+    </div>
+    <div class="user-list hidden" id="user-list">
+      <div class="online" id="online">
+        <div class="online-group">Online: 2</div>
+      </div>
+      <div class="offline" id="offline">
+        <div class="offline-group">Offline: 5</div>
+      </div>
+    </div>
+    <div class="login-area">
+      <div class="login-wrapper">
+        <form class="user-input-area" id="login-form">
+          <div class="login-header">Enter Your Account Credentials</div>
+          <input type="text" id="username_loginID" name="username_login" placeholder="Username or email" />
+          <input type="password" id="password_loginID" name="password_login" placeholder="Password" />
+          <div class="button-wrapper">
+            <button id="login" type="submit">Login</button>
+          </div>
+        </form>
+        <div class="login-footer">
+          Don't have a Real Time&#8482; account?<button id="register" type="button">
+            Register
+          </button>
+        </div>
+      </div>
+    </div>
+    <form class="register-area hidden" id="register-form">
+      <div class="register-wrapper">
+        <div class="user-input-area">
+          <div class="register-header">
+            Create Your Real Time&#8482; Account
+          </div>
+          <input type="text" class="mandatory" name="username-register" id="username-registerID"
+            placeholder="Username (nickname)" />
+          <input type="email" class="mandatory" id="email-registerID" name="email-register" placeholder="Email" />
+          <input type="password" class="mandatory" id="password-registerID" name="password-register"
+            placeholder="Password" />
+          <input type="password" class="mandatory" id="password-register-confirmID" name="password-register-confirm"
+            placeholder="Confirm Password" />
+          <input type="text" class="optional" name="first-name-register" placeholder="First Name (optional)" />
+          <input type="text" class="optional" name="last-name-register" placeholder="Last Name (optional)" />
+          <input type="text" class="optional" name="age-register" placeholder="Age (optional)" />
+          <div class="gender-wrapper optional">
+            Gender&nbsp;(optional):
+            <div name="gender-register" class="gender-register">
+              <input type="radio" name="gender-register" id="female" value="female" />
+              <label for="female">Female</label>
+              <input type="radio" name="gender-register" id="male" value="male" />
+              <label for="male">Male</label>
+              <input type="radio" name="gender-register" id="other" value="other" />
+              <label for="other">other</label>
+            </div>
+          </div>
+          <div class="button-wrapper">
+            <button id="create" type="submit">Register</button>
+          </div>
+        </div>
+        <div class="register-footer">
+          Already have a Real Time&#8482; account?<button id="back-to-login" type="button">
+            Login
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script src="./app.js" type="module"></script>
+</body>
+
+</html>
