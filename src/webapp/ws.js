@@ -85,6 +85,7 @@ export function Forum() {
           case "typing":
             // display typing to user
             let chatBubble = qS("chat-bubble");
+            chatBubble.innerHTML = `${currentUser.innerHTML} is typing..`;
             if (
               chatBubble.style.display === "" ||
               chatBubble.style.display === "none"
